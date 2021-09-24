@@ -1,23 +1,38 @@
 <!-- BEGIN_TF_DOCS -->
-[![Tests](https://github.com/netascode/terraform-aci-scaffolding/actions/workflows/test.yml/badge.svg)](https://github.com/netascode/terraform-aci-scaffolding/actions/workflows/test.yml)
+[![Tests](https://github.com/netascode/terraform-aci-device-selection-policy/actions/workflows/test.yml/badge.svg)](https://github.com/netascode/terraform-aci-device-selection-policy/actions/workflows/test.yml)
 
-# Terraform ACI Scaffolding Module
+# Terraform ACI Device Selection Policy Module
 
-Description
+Manages ACI Device Selection Policy
 
 Location in GUI:
-`Tenants` » `XXX`
+`Tenants` » `XXX` » `Services` » `L4-L7` » `Device Selection Policies`
 
 ## Examples
 
 ```hcl
-module "aci_scaffolding" {
-  source  = "netascode/scaffolding/aci"
+module "aci_device_selection_policy" {
+  source  = "netascode/device-selection-policy/aci"
   version = ">= 0.0.1"
 
-  name        = "ABC"
-  alias       = "ABC-ALIAS"
-  description = "My Description"
+  tenant                                                  = "ABC"
+  contract                                                = "CON1"
+  service_graph_template                                  = "SGT1"
+  sgt_device_name                                         = "DEV1"
+  consumer_l3_destination                                 = true
+  consumer_permit_logging                                 = true
+  consumer_logical_interface                              = "INT1"
+  consumer_redirect_policy                                = "REDIR1"
+  consumer_bridge_domain                                  = "BD1"
+  provider_l3_destination                                 = true
+  provider_permit_logging                                 = true
+  provider_logical_interface                              = "INT2"
+  provider_external_endpoint_group                        = "EXTEPG1"
+  provider_external_endpoint_group_l3out                  = "L3OUT1"
+  provider_external_endpoint_group_redistribute_bgp       = true
+  provider_external_endpoint_group_redistribute_ospf      = true
+  provider_external_endpoint_group_redistribute_connected = true
+  provider_external_endpoint_group_redistribute_static    = true
 }
 
 ```
@@ -39,20 +54,60 @@ module "aci_scaffolding" {
 
 | Name | Description | Type | Default | Required |
 |------|-------------|------|---------|:--------:|
-| <a name="input_name"></a> [name](#input\_name) | Tenant name. | `string` | n/a | yes |
-| <a name="input_alias"></a> [alias](#input\_alias) | Tenant alias. | `string` | `""` | no |
-| <a name="input_description"></a> [description](#input\_description) | Tenant description. | `string` | `""` | no |
+| <a name="input_tenant"></a> [tenant](#input\_tenant) | Tenant name. | `string` | n/a | yes |
+| <a name="input_contract"></a> [contract](#input\_contract) | Contract name. | `string` | n/a | yes |
+| <a name="input_service_graph_template"></a> [service\_graph\_template](#input\_service\_graph\_template) | Service graph template name. | `string` | n/a | yes |
+| <a name="input_sgt_device_tenant"></a> [sgt\_device\_tenant](#input\_sgt\_device\_tenant) | Device tenant name. | `string` | `""` | no |
+| <a name="input_sgt_device_name"></a> [sgt\_device\_name](#input\_sgt\_device\_name) | Device name. | `string` | n/a | yes |
+| <a name="input_consumer_l3_destination"></a> [consumer\_l3\_destination](#input\_consumer\_l3\_destination) | Consumer L3 destination. | `bool` | `false` | no |
+| <a name="input_consumer_permit_logging"></a> [consumer\_permit\_logging](#input\_consumer\_permit\_logging) | Consumer permit logging. | `bool` | `false` | no |
+| <a name="input_consumer_logical_interface"></a> [consumer\_logical\_interface](#input\_consumer\_logical\_interface) | Consumer logical interface. | `string` | n/a | yes |
+| <a name="input_consumer_redirect_policy"></a> [consumer\_redirect\_policy](#input\_consumer\_redirect\_policy) | Consumer redirect policy name. | `string` | `""` | no |
+| <a name="input_consumer_redirect_policy_tenant"></a> [consumer\_redirect\_policy\_tenant](#input\_consumer\_redirect\_policy\_tenant) | Consumer redirect policy tenant name. | `string` | `""` | no |
+| <a name="input_consumer_bridge_domain"></a> [consumer\_bridge\_domain](#input\_consumer\_bridge\_domain) | Consumer bridge domain name. | `string` | `""` | no |
+| <a name="input_consumer_bridge_domain_tenant"></a> [consumer\_bridge\_domain\_tenant](#input\_consumer\_bridge\_domain\_tenant) | Consumer bridge domain tenant name. | `string` | `""` | no |
+| <a name="input_consumer_external_endpoint_group"></a> [consumer\_external\_endpoint\_group](#input\_consumer\_external\_endpoint\_group) | Consumer external endpoint group name. | `string` | `""` | no |
+| <a name="input_consumer_external_endpoint_group_tenant"></a> [consumer\_external\_endpoint\_group\_tenant](#input\_consumer\_external\_endpoint\_group\_tenant) | Consumer external endpoint group tenant name. | `string` | `""` | no |
+| <a name="input_consumer_external_endpoint_group_l3out"></a> [consumer\_external\_endpoint\_group\_l3out](#input\_consumer\_external\_endpoint\_group\_l3out) | Consumer external endpoint group l3out name. | `string` | `""` | no |
+| <a name="input_consumer_external_endpoint_group_redistribute_bgp"></a> [consumer\_external\_endpoint\_group\_redistribute\_bgp](#input\_consumer\_external\_endpoint\_group\_redistribute\_bgp) | Consumer external endpoint group redistribute BGP. | `bool` | `false` | no |
+| <a name="input_consumer_external_endpoint_group_redistribute_ospf"></a> [consumer\_external\_endpoint\_group\_redistribute\_ospf](#input\_consumer\_external\_endpoint\_group\_redistribute\_ospf) | Consumer external endpoint group redistribute OSPF. | `bool` | `false` | no |
+| <a name="input_consumer_external_endpoint_group_redistribute_connected"></a> [consumer\_external\_endpoint\_group\_redistribute\_connected](#input\_consumer\_external\_endpoint\_group\_redistribute\_connected) | Consumer external endpoint group redistribute connected. | `bool` | `false` | no |
+| <a name="input_consumer_external_endpoint_group_redistribute_static"></a> [consumer\_external\_endpoint\_group\_redistribute\_static](#input\_consumer\_external\_endpoint\_group\_redistribute\_static) | Consumer external endpoint group redistribute static. | `bool` | `false` | no |
+| <a name="input_provider_l3_destination"></a> [provider\_l3\_destination](#input\_provider\_l3\_destination) | Provider L3 destination. | `bool` | `false` | no |
+| <a name="input_provider_permit_logging"></a> [provider\_permit\_logging](#input\_provider\_permit\_logging) | Provider permit logging. | `bool` | `false` | no |
+| <a name="input_provider_logical_interface"></a> [provider\_logical\_interface](#input\_provider\_logical\_interface) | Provider logical interface. | `string` | n/a | yes |
+| <a name="input_provider_redirect_policy"></a> [provider\_redirect\_policy](#input\_provider\_redirect\_policy) | Provider redirect policy name. | `string` | `""` | no |
+| <a name="input_provider_redirect_policy_tenant"></a> [provider\_redirect\_policy\_tenant](#input\_provider\_redirect\_policy\_tenant) | Provider redirect policy tenant name. | `string` | `""` | no |
+| <a name="input_provider_bridge_domain"></a> [provider\_bridge\_domain](#input\_provider\_bridge\_domain) | Provider bridge domain name. | `string` | `""` | no |
+| <a name="input_provider_bridge_domain_tenant"></a> [provider\_bridge\_domain\_tenant](#input\_provider\_bridge\_domain\_tenant) | Provider bridge domain tenant name. | `string` | `""` | no |
+| <a name="input_provider_external_endpoint_group"></a> [provider\_external\_endpoint\_group](#input\_provider\_external\_endpoint\_group) | Provider external endpoint group name. | `string` | `""` | no |
+| <a name="input_provider_external_endpoint_group_tenant"></a> [provider\_external\_endpoint\_group\_tenant](#input\_provider\_external\_endpoint\_group\_tenant) | Provider external endpoint group tenant name. | `string` | `""` | no |
+| <a name="input_provider_external_endpoint_group_l3out"></a> [provider\_external\_endpoint\_group\_l3out](#input\_provider\_external\_endpoint\_group\_l3out) | Provider external endpoint group l3out name. | `string` | `""` | no |
+| <a name="input_provider_external_endpoint_group_redistribute_bgp"></a> [provider\_external\_endpoint\_group\_redistribute\_bgp](#input\_provider\_external\_endpoint\_group\_redistribute\_bgp) | Provider external endpoint group redistribute BGP. | `bool` | `false` | no |
+| <a name="input_provider_external_endpoint_group_redistribute_ospf"></a> [provider\_external\_endpoint\_group\_redistribute\_ospf](#input\_provider\_external\_endpoint\_group\_redistribute\_ospf) | Provider external endpoint group redistribute OSPF. | `bool` | `false` | no |
+| <a name="input_provider_external_endpoint_group_redistribute_connected"></a> [provider\_external\_endpoint\_group\_redistribute\_connected](#input\_provider\_external\_endpoint\_group\_redistribute\_connected) | Provider external endpoint group redistribute connected. | `bool` | `false` | no |
+| <a name="input_provider_external_endpoint_group_redistribute_static"></a> [provider\_external\_endpoint\_group\_redistribute\_static](#input\_provider\_external\_endpoint\_group\_redistribute\_static) | Provider external endpoint group redistribute static. | `bool` | `false` | no |
 
 ## Outputs
 
 | Name | Description |
 |------|-------------|
-| <a name="output_dn"></a> [dn](#output\_dn) | Distinguished name of `fvTenant` object. |
-| <a name="output_name"></a> [name](#output\_name) | Tenant name. |
+| <a name="output_dn"></a> [dn](#output\_dn) | Distinguished name of `vnsLDevCtx` object. |
 
 ## Resources
 
 | Name | Type |
 |------|------|
-| [aci_rest.fvTenant](https://registry.terraform.io/providers/netascode/aci/latest/docs/resources/rest) | resource |
+| [aci_rest.vnsLDevCtx](https://registry.terraform.io/providers/netascode/aci/latest/docs/resources/rest) | resource |
+| [aci_rest.vnsLIfCtx_consumer](https://registry.terraform.io/providers/netascode/aci/latest/docs/resources/rest) | resource |
+| [aci_rest.vnsLIfCtx_provider](https://registry.terraform.io/providers/netascode/aci/latest/docs/resources/rest) | resource |
+| [aci_rest.vnsRsLDevCtxToLDev](https://registry.terraform.io/providers/netascode/aci/latest/docs/resources/rest) | resource |
+| [aci_rest.vnsRsLIfCtxToBD_consumer](https://registry.terraform.io/providers/netascode/aci/latest/docs/resources/rest) | resource |
+| [aci_rest.vnsRsLIfCtxToBD_provider](https://registry.terraform.io/providers/netascode/aci/latest/docs/resources/rest) | resource |
+| [aci_rest.vnsRsLIfCtxToInstP_consumer](https://registry.terraform.io/providers/netascode/aci/latest/docs/resources/rest) | resource |
+| [aci_rest.vnsRsLIfCtxToInstP_provider](https://registry.terraform.io/providers/netascode/aci/latest/docs/resources/rest) | resource |
+| [aci_rest.vnsRsLIfCtxToLIf_consumer](https://registry.terraform.io/providers/netascode/aci/latest/docs/resources/rest) | resource |
+| [aci_rest.vnsRsLIfCtxToLIf_provider](https://registry.terraform.io/providers/netascode/aci/latest/docs/resources/rest) | resource |
+| [aci_rest.vnsRsLIfCtxToSvcRedirectPol_consumer](https://registry.terraform.io/providers/netascode/aci/latest/docs/resources/rest) | resource |
+| [aci_rest.vnsRsLIfCtxToSvcRedirectPol_provider](https://registry.terraform.io/providers/netascode/aci/latest/docs/resources/rest) | resource |
 <!-- END_TF_DOCS -->
