@@ -14,7 +14,7 @@ Note that this example will create resources. Resources can be destroyed with `t
 ```hcl
 module "aci_device_selection_policy" {
   source  = "netascode/device-selection-policy/aci"
-  version = ">= 0.0.1"
+  version = ">= 0.1.0"
 
   tenant                                                  = "ABC"
   contract                                                = "CON1"
@@ -35,6 +35,5 @@ module "aci_device_selection_policy" {
   provider_external_endpoint_group_redistribute_connected = true
   provider_external_endpoint_group_redistribute_static    = true
 }
-
 ```
 <!-- END_TF_DOCS -->

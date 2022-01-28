@@ -5,13 +5,13 @@ terraform {
     }
 
     aci = {
-      source  = "netascode/aci"
-      version = ">=0.2.0"
+      source  = "CiscoDevNet/aci"
+      version = ">=2.0.0"
     }
   }
 }
 
-resource "aci_rest" "fvTenant" {
+resource "aci_rest_managed" "fvTenant" {
   dn         = "uni/tn-TF"
   class_name = "fvTenant"
 }
@@ -19,7 +19,7 @@ resource "aci_rest" "fvTenant" {
 module "main" {
   source = "../.."
 
-  tenant                                                  = aci_rest.fvTenant.content.name
+  tenant                                                  = aci_rest_managed.fvTenant.content.name
   contract                                                = "CON1"
   service_graph_template                                  = "SGT1"
   sgt_device_name                                         = "DEV1"
@@ -39,8 +39,8 @@ module "main" {
   provider_external_endpoint_group_redistribute_static    = true
 }
 
-data "aci_rest" "vnsLDevCtx" {
-  dn = "uni/tn-${aci_rest.fvTenant.content.name}/ldevCtx-c-CON1-g-SGT1-n-N1"
+data "aci_rest_managed" "vnsLDevCtx" {
+  dn = "uni/tn-${aci_rest_managed.fvTenant.content.name}/ldevCtx-c-CON1-g-SGT1-n-N1"
 
   depends_on = [module.main]
 }
@@ -50,25 +50,25 @@ resource "test_assertions" "vnsLDevCtx" {
 
   equal "ctrctNameOrLbl" {
     description = "ctrctNameOrLbl"
-    got         = data.aci_rest.vnsLDevCtx.content.ctrctNameOrLbl
+    got         = data.aci_rest_managed.vnsLDevCtx.content.ctrctNameOrLbl
     want        = "CON1"
   }
 
   equal "graphNameOrLbl" {
     description = "graphNameOrLbl"
-    got         = data.aci_rest.vnsLDevCtx.content.graphNameOrLbl
+    got         = data.aci_rest_managed.vnsLDevCtx.content.graphNameOrLbl
     want        = "SGT1"
   }
 
   equal "nodeNameOrLbl" {
     description = "nodeNameOrLbl"
-    got         = data.aci_rest.vnsLDevCtx.content.nodeNameOrLbl
+    got         = data.aci_rest_managed.vnsLDevCtx.content.nodeNameOrLbl
     want        = "N1"
   }
 }
 
-data "aci_rest" "vnsRsLDevCtxToLDev" {
-  dn = "${data.aci_rest.vnsLDevCtx.id}/rsLDevCtxToLDev"
+data "aci_rest_managed" "vnsRsLDevCtxToLDev" {
+  dn = "${data.aci_rest_managed.vnsLDevCtx.id}/rsLDevCtxToLDev"
 
   depends_on = [module.main]
 }
@@ -78,13 +78,13 @@ resource "test_assertions" "vnsRsLDevCtxToLDev" {
 
   equal "tDn" {
     description = "tDn"
-    got         = data.aci_rest.vnsRsLDevCtxToLDev.content.tDn
-    want        = "uni/tn-${aci_rest.fvTenant.content.name}/lDevVip-DEV1"
+    got         = data.aci_rest_managed.vnsRsLDevCtxToLDev.content.tDn
+    want        = "uni/tn-${aci_rest_managed.fvTenant.content.name}/lDevVip-DEV1"
   }
 }
 
-data "aci_rest" "vnsLIfCtx_consumer" {
-  dn = "${data.aci_rest.vnsLDevCtx.id}/lIfCtx-c-consumer"
+data "aci_rest_managed" "vnsLIfCtx_consumer" {
+  dn = "${data.aci_rest_managed.vnsLDevCtx.id}/lIfCtx-c-consumer"
 
   depends_on = [module.main]
 }
@@ -94,25 +94,25 @@ resource "test_assertions" "vnsLIfCtx_consumer" {
 
   equal "connNameOrLbl" {
     description = "connNameOrLbl"
-    got         = data.aci_rest.vnsLIfCtx_consumer.content.connNameOrLbl
+    got         = data.aci_rest_managed.vnsLIfCtx_consumer.content.connNameOrLbl
     want        = "consumer"
   }
 
   equal "l3Dest" {
     description = "l3Dest"
-    got         = data.aci_rest.vnsLIfCtx_consumer.content.l3Dest
+    got         = data.aci_rest_managed.vnsLIfCtx_consumer.content.l3Dest
     want        = "yes"
   }
 
   equal "permitLog" {
     description = "permitLog"
-    got         = data.aci_rest.vnsLIfCtx_consumer.content.permitLog
+    got         = data.aci_rest_managed.vnsLIfCtx_consumer.content.permitLog
     want        = "yes"
   }
 }
 
-data "aci_rest" "vnsRsLIfCtxToSvcRedirectPol_consumer" {
-  dn = "${data.aci_rest.vnsLIfCtx_consumer.id}/rsLIfCtxToSvcRedirectPol"
+data "aci_rest_managed" "vnsRsLIfCtxToSvcRedirectPol_consumer" {
+  dn = "${data.aci_rest_managed.vnsLIfCtx_consumer.id}/rsLIfCtxToSvcRedirectPol"
 
   depends_on = [module.main]
 }
@@ -122,13 +122,13 @@ resource "test_assertions" "vnsRsLIfCtxToSvcRedirectPol_consumer" {
 
   equal "tDn" {
     description = "tDn"
-    got         = data.aci_rest.vnsRsLIfCtxToSvcRedirectPol_consumer.content.tDn
-    want        = "uni/tn-${aci_rest.fvTenant.content.name}/svcCont/svcRedirectPol-REDIR1"
+    got         = data.aci_rest_managed.vnsRsLIfCtxToSvcRedirectPol_consumer.content.tDn
+    want        = "uni/tn-${aci_rest_managed.fvTenant.content.name}/svcCont/svcRedirectPol-REDIR1"
   }
 }
 
-data "aci_rest" "vnsRsLIfCtxToBD_consumer" {
-  dn = "${data.aci_rest.vnsLIfCtx_consumer.id}/rsLIfCtxToBD"
+data "aci_rest_managed" "vnsRsLIfCtxToBD_consumer" {
+  dn = "${data.aci_rest_managed.vnsLIfCtx_consumer.id}/rsLIfCtxToBD"
 
   depends_on = [module.main]
 }
@@ -138,13 +138,13 @@ resource "test_assertions" "vnsRsLIfCtxToBD_consumer" {
 
   equal "tDn" {
     description = "tDn"
-    got         = data.aci_rest.vnsRsLIfCtxToBD_consumer.content.tDn
-    want        = "uni/tn-${aci_rest.fvTenant.content.name}/BD-BD1"
+    got         = data.aci_rest_managed.vnsRsLIfCtxToBD_consumer.content.tDn
+    want        = "uni/tn-${aci_rest_managed.fvTenant.content.name}/BD-BD1"
   }
 }
 
-data "aci_rest" "vnsRsLIfCtxToLIf_consumer" {
-  dn = "${data.aci_rest.vnsLIfCtx_consumer.id}/rsLIfCtxToLIf"
+data "aci_rest_managed" "vnsRsLIfCtxToLIf_consumer" {
+  dn = "${data.aci_rest_managed.vnsLIfCtx_consumer.id}/rsLIfCtxToLIf"
 
   depends_on = [module.main]
 }
@@ -154,13 +154,13 @@ resource "test_assertions" "vnsRsLIfCtxToLIf_consumer" {
 
   equal "tDn" {
     description = "tDn"
-    got         = data.aci_rest.vnsRsLIfCtxToLIf_consumer.content.tDn
-    want        = "uni/tn-${aci_rest.fvTenant.content.name}/lDevVip-DEV1/lIf-INT1"
+    got         = data.aci_rest_managed.vnsRsLIfCtxToLIf_consumer.content.tDn
+    want        = "uni/tn-${aci_rest_managed.fvTenant.content.name}/lDevVip-DEV1/lIf-INT1"
   }
 }
 
-data "aci_rest" "vnsLIfCtx_provider" {
-  dn = "${data.aci_rest.vnsLDevCtx.id}/lIfCtx-c-provider"
+data "aci_rest_managed" "vnsLIfCtx_provider" {
+  dn = "${data.aci_rest_managed.vnsLDevCtx.id}/lIfCtx-c-provider"
 
   depends_on = [module.main]
 }
@@ -170,25 +170,25 @@ resource "test_assertions" "vnsLIfCtx_provider" {
 
   equal "connNameOrLbl" {
     description = "connNameOrLbl"
-    got         = data.aci_rest.vnsLIfCtx_provider.content.connNameOrLbl
+    got         = data.aci_rest_managed.vnsLIfCtx_provider.content.connNameOrLbl
     want        = "provider"
   }
 
   equal "l3Dest" {
     description = "l3Dest"
-    got         = data.aci_rest.vnsLIfCtx_provider.content.l3Dest
+    got         = data.aci_rest_managed.vnsLIfCtx_provider.content.l3Dest
     want        = "yes"
   }
 
   equal "permitLog" {
     description = "permitLog"
-    got         = data.aci_rest.vnsLIfCtx_provider.content.permitLog
+    got         = data.aci_rest_managed.vnsLIfCtx_provider.content.permitLog
     want        = "yes"
   }
 }
 
-data "aci_rest" "vnsRsLIfCtxToInstP_provider" {
-  dn = "${data.aci_rest.vnsLIfCtx_provider.id}/rsLIfCtxToInstP"
+data "aci_rest_managed" "vnsRsLIfCtxToInstP_provider" {
+  dn = "${data.aci_rest_managed.vnsLIfCtx_provider.id}/rsLIfCtxToInstP"
 
   depends_on = [module.main]
 }
@@ -198,19 +198,19 @@ resource "test_assertions" "vnsRsLIfCtxToInstP_provider" {
 
   equal "redistribute" {
     description = "redistribute"
-    got         = data.aci_rest.vnsRsLIfCtxToInstP_provider.content.redistribute
+    got         = data.aci_rest_managed.vnsRsLIfCtxToInstP_provider.content.redistribute
     want        = "bgp,connected,ospf,static"
   }
 
   equal "tDn" {
     description = "tDn"
-    got         = data.aci_rest.vnsRsLIfCtxToInstP_provider.content.tDn
-    want        = "uni/tn-${aci_rest.fvTenant.content.name}/out-L3OUT1/instP-EXTEPG1"
+    got         = data.aci_rest_managed.vnsRsLIfCtxToInstP_provider.content.tDn
+    want        = "uni/tn-${aci_rest_managed.fvTenant.content.name}/out-L3OUT1/instP-EXTEPG1"
   }
 }
 
-data "aci_rest" "vnsRsLIfCtxToLIf_provider" {
-  dn = "${data.aci_rest.vnsLIfCtx_provider.id}/rsLIfCtxToLIf"
+data "aci_rest_managed" "vnsRsLIfCtxToLIf_provider" {
+  dn = "${data.aci_rest_managed.vnsLIfCtx_provider.id}/rsLIfCtxToLIf"
 
   depends_on = [module.main]
 }
@@ -220,7 +220,7 @@ resource "test_assertions" "vnsRsLIfCtxToLIf_provider" {
 
   equal "tDn" {
     description = "tDn"
-    got         = data.aci_rest.vnsRsLIfCtxToLIf_provider.content.tDn
-    want        = "uni/tn-${aci_rest.fvTenant.content.name}/lDevVip-DEV1/lIf-INT2"
+    got         = data.aci_rest_managed.vnsRsLIfCtxToLIf_provider.content.tDn
+    want        = "uni/tn-${aci_rest_managed.fvTenant.content.name}/lDevVip-DEV1/lIf-INT2"
   }
 }

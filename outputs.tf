@@ -1,4 +1,4 @@
 output "dn" {
-  value       = aci_rest.vnsLDevCtx.id
+  value       = aci_rest_managed.vnsLDevCtx.id
   description = "Distinguished name of `vnsLDevCtx` object."
 }
