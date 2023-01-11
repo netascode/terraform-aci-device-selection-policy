@@ -1,4 +1,4 @@
-## 0.1.1 (unreleased)
+## 0.1.1
 
 - Add service EPG policy
 - Add custom QoS policy
