@@ -1,6 +1,6 @@
 module "aci_device_selection_policy" {
   source  = "netascode/device-selection-policy/aci"
-  version = ">= 0.1.0"
+  version = ">= 0.1.1"
 
   tenant                                                  = "ABC"
   contract                                                = "CON1"
@@ -11,6 +11,8 @@ module "aci_device_selection_policy" {
   consumer_logical_interface                              = "INT1"
   consumer_redirect_policy                                = "REDIR1"
   consumer_bridge_domain                                  = "BD1"
+  consumer_service_epg_policy                             = "SEPGP1"
+  consumer_custom_qos_policy                              = "QOSP1"
   provider_l3_destination                                 = true
   provider_permit_logging                                 = true
   provider_logical_interface                              = "INT2"
@@ -20,4 +22,6 @@ module "aci_device_selection_policy" {
   provider_external_endpoint_group_redistribute_ospf      = true
   provider_external_endpoint_group_redistribute_connected = true
   provider_external_endpoint_group_redistribute_static    = true
+  provider_service_epg_policy                             = "SEPGP1"
+  provider_custom_qos_policy                              = "QOSP1"
 }

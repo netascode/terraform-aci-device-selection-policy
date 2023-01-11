@@ -62,6 +62,24 @@ resource "aci_rest_managed" "vnsRsLIfCtxToLIf_consumer" {
   }
 }
 
+resource "aci_rest_managed" "vnsRsLIfCtxToSvcEPgPol_consumer" {
+  count      = var.consumer_service_epg_policy != "" ? 1 : 0
+  dn         = "${aci_rest_managed.vnsLIfCtx_consumer.dn}/rsLIfCtxToSvcEPgPol"
+  class_name = "vnsRsLIfCtxToSvcEPgPol"
+  content = {
+    tDn = "uni/tn-${var.consumer_service_epg_policy_tenant != "" ? var.consumer_service_epg_policy_tenant : var.tenant}/svcCont/svcEPgPol-${var.consumer_service_epg_policy}"
+  }
+}
+
+resource "aci_rest_managed" "vnsRsLIfCtxToCustQosPol_consumer" {
+  count      = var.consumer_custom_qos_policy != "" ? 1 : 0
+  dn         = "${aci_rest_managed.vnsLIfCtx_consumer.dn}/rsLIfCtxToCustQosPol"
+  class_name = "vnsRsLIfCtxToCustQosPol"
+  content = {
+    tnQosCustomPolName = var.consumer_custom_qos_policy
+  }
+}
+
 resource "aci_rest_managed" "vnsLIfCtx_provider" {
   dn         = "${aci_rest_managed.vnsLDevCtx.dn}/lIfCtx-c-provider"
   class_name = "vnsLIfCtx"
@@ -105,5 +123,23 @@ resource "aci_rest_managed" "vnsRsLIfCtxToLIf_provider" {
   class_name = "vnsRsLIfCtxToLIf"
   content = {
     tDn = "uni/tn-${var.sgt_device_tenant != "" ? var.sgt_device_tenant : var.tenant}/lDevVip-${var.sgt_device_name}/lIf-${var.provider_logical_interface}"
+  }
+}
+
+resource "aci_rest_managed" "vnsRsLIfCtxToSvcEPgPol_provider" {
+  count      = var.provider_service_epg_policy != "" ? 1 : 0
+  dn         = "${aci_rest_managed.vnsLIfCtx_provider.dn}/rsLIfCtxToSvcEPgPol"
+  class_name = "vnsRsLIfCtxToSvcEPgPol"
+  content = {
+    tDn = "uni/tn-${var.provider_service_epg_policy_tenant != "" ? var.provider_service_epg_policy_tenant : var.tenant}/svcCont/svcEPgPol-${var.provider_service_epg_policy}"
+  }
+}
+
+resource "aci_rest_managed" "vnsRsLIfCtxToCustQosPol_provider" {
+  count      = var.provider_custom_qos_policy != "" ? 1 : 0
+  dn         = "${aci_rest_managed.vnsLIfCtx_provider.dn}/rsLIfCtxToCustQosPol"
+  class_name = "vnsRsLIfCtxToCustQosPol"
+  content = {
+    tnQosCustomPolName = var.provider_custom_qos_policy
   }
 }

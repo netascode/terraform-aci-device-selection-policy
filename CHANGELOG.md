@@ -1,3 +1,8 @@
+## 0.1.1 (unreleased)
+
+- Add service EPG policy
+- Add custom QoS policy
+
 ## 0.1.0
 
 - Migrate to devnet provider

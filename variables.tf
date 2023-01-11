@@ -172,6 +172,39 @@ variable "consumer_external_endpoint_group_redistribute_static" {
   default     = false
 }
 
+variable "consumer_service_epg_policy" {
+  description = "Consumer service EPG policy name."
+  type        = string
+  default     = ""
+
+  validation {
+    condition     = can(regex("^[a-zA-Z0-9_.-]{0,64}$", var.consumer_service_epg_policy))
+    error_message = "Allowed characters: `a`-`z`, `A`-`Z`, `0`-`9`, `_`, `.`, `-`. Maximum characters: 64."
+  }
+}
+
+variable "consumer_service_epg_policy_tenant" {
+  description = "Consumer service EPG policy tenant name."
+  type        = string
+  default     = ""
+
+  validation {
+    condition     = can(regex("^[a-zA-Z0-9_.-]{0,64}$", var.consumer_service_epg_policy_tenant))
+    error_message = "Allowed characters: `a`-`z`, `A`-`Z`, `0`-`9`, `_`, `.`, `-`. Maximum characters: 64."
+  }
+}
+
+variable "consumer_custom_qos_policy" {
+  description = "Consumer custome QoS policy name."
+  type        = string
+  default     = ""
+
+  validation {
+    condition     = can(regex("^[a-zA-Z0-9_.-]{0,64}$", var.consumer_custom_qos_policy))
+    error_message = "Allowed characters: `a`-`z`, `A`-`Z`, `0`-`9`, `_`, `.`, `-`. Maximum characters: 64."
+  }
+}
+
 variable "provider_l3_destination" {
   description = "Provider L3 destination."
   type        = bool
@@ -293,4 +326,37 @@ variable "provider_external_endpoint_group_redistribute_static" {
   description = "Provider external endpoint group redistribute static."
   type        = bool
   default     = false
+}
+
+variable "provider_service_epg_policy" {
+  description = "Provider service EPG policy name."
+  type        = string
+  default     = ""
+
+  validation {
+    condition     = can(regex("^[a-zA-Z0-9_.-]{0,64}$", var.provider_service_epg_policy))
+    error_message = "Allowed characters: `a`-`z`, `A`-`Z`, `0`-`9`, `_`, `.`, `-`. Maximum characters: 64."
+  }
+}
+
+variable "provider_service_epg_policy_tenant" {
+  description = "Provider service EPG policy tenant name."
+  type        = string
+  default     = ""
+
+  validation {
+    condition     = can(regex("^[a-zA-Z0-9_.-]{0,64}$", var.provider_service_epg_policy_tenant))
+    error_message = "Allowed characters: `a`-`z`, `A`-`Z`, `0`-`9`, `_`, `.`, `-`. Maximum characters: 64."
+  }
+}
+
+variable "provider_custom_qos_policy" {
+  description = "Provider custome QoS policy name."
+  type        = string
+  default     = ""
+
+  validation {
+    condition     = can(regex("^[a-zA-Z0-9_.-]{0,64}$", var.provider_custom_qos_policy))
+    error_message = "Allowed characters: `a`-`z`, `A`-`Z`, `0`-`9`, `_`, `.`, `-`. Maximum characters: 64."
+  }
 }

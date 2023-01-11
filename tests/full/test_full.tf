@@ -30,6 +30,8 @@ module "main" {
   consumer_logical_interface                              = "INT1"
   consumer_redirect_policy                                = "REDIR1"
   consumer_bridge_domain                                  = "BD1"
+  consumer_service_epg_policy                             = "SEPGP1"
+  consumer_custom_qos_policy                              = "QOSP1"
   provider_l3_destination                                 = true
   provider_permit_logging                                 = true
   provider_logical_interface                              = "INT2"
@@ -39,6 +41,8 @@ module "main" {
   provider_external_endpoint_group_redistribute_ospf      = true
   provider_external_endpoint_group_redistribute_connected = true
   provider_external_endpoint_group_redistribute_static    = true
+  provider_service_epg_policy                             = "SEPGP1"
+  provider_custom_qos_policy                              = "QOSP1"
 }
 
 data "aci_rest_managed" "vnsLDevCtx" {
@@ -161,6 +165,38 @@ resource "test_assertions" "vnsRsLIfCtxToLIf_consumer" {
   }
 }
 
+data "aci_rest_managed" "vnsRsLIfCtxToSvcEPgPol_consumer" {
+  dn = "${data.aci_rest_managed.vnsLIfCtx_consumer.id}/rsLIfCtxToSvcEPgPol"
+
+  depends_on = [module.main]
+}
+
+resource "test_assertions" "vnsRsLIfCtxToSvcEPgPol_consumer" {
+  component = "vnsRsLIfCtxToSvcEPgPol_consumer"
+
+  equal "tDn" {
+    description = "tDn"
+    got         = data.aci_rest_managed.vnsRsLIfCtxToSvcEPgPol_consumer.content.tDn
+    want        = "uni/tn-${aci_rest_managed.fvTenant.content.name}/svcCont/svcEPgPol-SEPGP1"
+  }
+}
+
+data "aci_rest_managed" "vnsRsLIfCtxToCustQosPol_consumer" {
+  dn = "${data.aci_rest_managed.vnsLIfCtx_consumer.id}/rsLIfCtxToCustQosPol"
+
+  depends_on = [module.main]
+}
+
+resource "test_assertions" "vnsRsLIfCtxToCustQosPol_consumer" {
+  component = "vnsRsLIfCtxToCustQosPol_consumer"
+
+  equal "tnQosCustomPolName" {
+    description = "tnQosCustomPolName"
+    got         = data.aci_rest_managed.vnsRsLIfCtxToCustQosPol_consumer.content.tnQosCustomPolName
+    want        = "QOSP1"
+  }
+}
+
 data "aci_rest_managed" "vnsLIfCtx_provider" {
   dn = "${data.aci_rest_managed.vnsLDevCtx.id}/lIfCtx-c-provider"
 
@@ -224,5 +260,37 @@ resource "test_assertions" "vnsRsLIfCtxToLIf_provider" {
     description = "tDn"
     got         = data.aci_rest_managed.vnsRsLIfCtxToLIf_provider.content.tDn
     want        = "uni/tn-${aci_rest_managed.fvTenant.content.name}/lDevVip-DEV1/lIf-INT2"
+  }
+}
+
+data "aci_rest_managed" "vnsRsLIfCtxToSvcEPgPol_provider" {
+  dn = "${data.aci_rest_managed.vnsLIfCtx_provider.id}/rsLIfCtxToSvcEPgPol"
+
+  depends_on = [module.main]
+}
+
+resource "test_assertions" "vnsRsLIfCtxToSvcEPgPol_provider" {
+  component = "vnsRsLIfCtxToSvcEPgPol_provider"
+
+  equal "tDn" {
+    description = "tDn"
+    got         = data.aci_rest_managed.vnsRsLIfCtxToSvcEPgPol_provider.content.tDn
+    want        = "uni/tn-${aci_rest_managed.fvTenant.content.name}/svcCont/svcEPgPol-SEPGP1"
+  }
+}
+
+data "aci_rest_managed" "vnsRsLIfCtxToCustQosPol_provider" {
+  dn = "${data.aci_rest_managed.vnsLIfCtx_provider.id}/rsLIfCtxToCustQosPol"
+
+  depends_on = [module.main]
+}
+
+resource "test_assertions" "vnsRsLIfCtxToCustQosPol_provider" {
+  component = "vnsRsLIfCtxToCustQosPol_provider"
+
+  equal "tnQosCustomPolName" {
+    description = "tnQosCustomPolName"
+    got         = data.aci_rest_managed.vnsRsLIfCtxToCustQosPol_provider.content.tnQosCustomPolName
+    want        = "QOSP1"
   }
 }

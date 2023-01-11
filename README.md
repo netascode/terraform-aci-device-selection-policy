@@ -13,7 +13,7 @@ Location in GUI:
 ```hcl
 module "aci_device_selection_policy" {
   source  = "netascode/device-selection-policy/aci"
-  version = ">= 0.1.0"
+  version = ">= 0.1.1"
 
   tenant                                                  = "ABC"
   contract                                                = "CON1"
@@ -24,6 +24,8 @@ module "aci_device_selection_policy" {
   consumer_logical_interface                              = "INT1"
   consumer_redirect_policy                                = "REDIR1"
   consumer_bridge_domain                                  = "BD1"
+  consumer_service_epg_policy                             = "SEPGP1"
+  consumer_custom_qos_policy                              = "QOSP1"
   provider_l3_destination                                 = true
   provider_permit_logging                                 = true
   provider_logical_interface                              = "INT2"
@@ -33,6 +35,8 @@ module "aci_device_selection_policy" {
   provider_external_endpoint_group_redistribute_ospf      = true
   provider_external_endpoint_group_redistribute_connected = true
   provider_external_endpoint_group_redistribute_static    = true
+  provider_service_epg_policy                             = "SEPGP1"
+  provider_custom_qos_policy                              = "QOSP1"
 }
 ```
 
@@ -72,6 +76,9 @@ module "aci_device_selection_policy" {
 | <a name="input_consumer_external_endpoint_group_redistribute_ospf"></a> [consumer\_external\_endpoint\_group\_redistribute\_ospf](#input\_consumer\_external\_endpoint\_group\_redistribute\_ospf) | Consumer external endpoint group redistribute OSPF. | `bool` | `false` | no |
 | <a name="input_consumer_external_endpoint_group_redistribute_connected"></a> [consumer\_external\_endpoint\_group\_redistribute\_connected](#input\_consumer\_external\_endpoint\_group\_redistribute\_connected) | Consumer external endpoint group redistribute connected. | `bool` | `false` | no |
 | <a name="input_consumer_external_endpoint_group_redistribute_static"></a> [consumer\_external\_endpoint\_group\_redistribute\_static](#input\_consumer\_external\_endpoint\_group\_redistribute\_static) | Consumer external endpoint group redistribute static. | `bool` | `false` | no |
+| <a name="input_consumer_service_epg_policy"></a> [consumer\_service\_epg\_policy](#input\_consumer\_service\_epg\_policy) | Consumer service EPG policy name. | `string` | `""` | no |
+| <a name="input_consumer_service_epg_policy_tenant"></a> [consumer\_service\_epg\_policy\_tenant](#input\_consumer\_service\_epg\_policy\_tenant) | Consumer service EPG policy tenant name. | `string` | `""` | no |
+| <a name="input_consumer_custom_qos_policy"></a> [consumer\_custom\_qos\_policy](#input\_consumer\_custom\_qos\_policy) | Consumer custome QoS policy name. | `string` | `""` | no |
 | <a name="input_provider_l3_destination"></a> [provider\_l3\_destination](#input\_provider\_l3\_destination) | Provider L3 destination. | `bool` | `false` | no |
 | <a name="input_provider_permit_logging"></a> [provider\_permit\_logging](#input\_provider\_permit\_logging) | Provider permit logging. | `bool` | `false` | no |
 | <a name="input_provider_logical_interface"></a> [provider\_logical\_interface](#input\_provider\_logical\_interface) | Provider logical interface. | `string` | n/a | yes |
@@ -86,6 +93,9 @@ module "aci_device_selection_policy" {
 | <a name="input_provider_external_endpoint_group_redistribute_ospf"></a> [provider\_external\_endpoint\_group\_redistribute\_ospf](#input\_provider\_external\_endpoint\_group\_redistribute\_ospf) | Provider external endpoint group redistribute OSPF. | `bool` | `false` | no |
 | <a name="input_provider_external_endpoint_group_redistribute_connected"></a> [provider\_external\_endpoint\_group\_redistribute\_connected](#input\_provider\_external\_endpoint\_group\_redistribute\_connected) | Provider external endpoint group redistribute connected. | `bool` | `false` | no |
 | <a name="input_provider_external_endpoint_group_redistribute_static"></a> [provider\_external\_endpoint\_group\_redistribute\_static](#input\_provider\_external\_endpoint\_group\_redistribute\_static) | Provider external endpoint group redistribute static. | `bool` | `false` | no |
+| <a name="input_provider_service_epg_policy"></a> [provider\_service\_epg\_policy](#input\_provider\_service\_epg\_policy) | Provider service EPG policy name. | `string` | `""` | no |
+| <a name="input_provider_service_epg_policy_tenant"></a> [provider\_service\_epg\_policy\_tenant](#input\_provider\_service\_epg\_policy\_tenant) | Provider service EPG policy tenant name. | `string` | `""` | no |
+| <a name="input_provider_custom_qos_policy"></a> [provider\_custom\_qos\_policy](#input\_provider\_custom\_qos\_policy) | Provider custome QoS policy name. | `string` | `""` | no |
 
 ## Outputs
 
@@ -103,10 +113,14 @@ module "aci_device_selection_policy" {
 | [aci_rest_managed.vnsRsLDevCtxToLDev](https://registry.terraform.io/providers/CiscoDevNet/aci/latest/docs/resources/rest_managed) | resource |
 | [aci_rest_managed.vnsRsLIfCtxToBD_consumer](https://registry.terraform.io/providers/CiscoDevNet/aci/latest/docs/resources/rest_managed) | resource |
 | [aci_rest_managed.vnsRsLIfCtxToBD_provider](https://registry.terraform.io/providers/CiscoDevNet/aci/latest/docs/resources/rest_managed) | resource |
+| [aci_rest_managed.vnsRsLIfCtxToCustQosPol_consumer](https://registry.terraform.io/providers/CiscoDevNet/aci/latest/docs/resources/rest_managed) | resource |
+| [aci_rest_managed.vnsRsLIfCtxToCustQosPol_provider](https://registry.terraform.io/providers/CiscoDevNet/aci/latest/docs/resources/rest_managed) | resource |
 | [aci_rest_managed.vnsRsLIfCtxToInstP_consumer](https://registry.terraform.io/providers/CiscoDevNet/aci/latest/docs/resources/rest_managed) | resource |
 | [aci_rest_managed.vnsRsLIfCtxToInstP_provider](https://registry.terraform.io/providers/CiscoDevNet/aci/latest/docs/resources/rest_managed) | resource |
 | [aci_rest_managed.vnsRsLIfCtxToLIf_consumer](https://registry.terraform.io/providers/CiscoDevNet/aci/latest/docs/resources/rest_managed) | resource |
 | [aci_rest_managed.vnsRsLIfCtxToLIf_provider](https://registry.terraform.io/providers/CiscoDevNet/aci/latest/docs/resources/rest_managed) | resource |
+| [aci_rest_managed.vnsRsLIfCtxToSvcEPgPol_consumer](https://registry.terraform.io/providers/CiscoDevNet/aci/latest/docs/resources/rest_managed) | resource |
+| [aci_rest_managed.vnsRsLIfCtxToSvcEPgPol_provider](https://registry.terraform.io/providers/CiscoDevNet/aci/latest/docs/resources/rest_managed) | resource |
 | [aci_rest_managed.vnsRsLIfCtxToSvcRedirectPol_consumer](https://registry.terraform.io/providers/CiscoDevNet/aci/latest/docs/resources/rest_managed) | resource |
 | [aci_rest_managed.vnsRsLIfCtxToSvcRedirectPol_provider](https://registry.terraform.io/providers/CiscoDevNet/aci/latest/docs/resources/rest_managed) | resource |
 <!-- END_TF_DOCS -->
